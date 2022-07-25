@@ -7,15 +7,17 @@
       <h1 class="text-3xl font-semibold leading-tight">
         <slot />
       </h1>
-      <jb-button
-        v-if="button == 'add'"
-        :icon="icon"
-        :outline="darkMode"
-        small
-        color="info"
-        :label="label"
-        @click="redirect(url)"
-      />
+      <div v-if="user != 'admin'">
+        <jb-button
+          v-if="button == 'add'"
+          :icon="icon"
+          :outline="darkMode"
+          small
+          color="info"
+          :label="label"
+          @click="redirect(url)"
+        />
+      </div>
     </level>
   </section>
 </template>
@@ -38,6 +40,10 @@ export default {
   },
   props: {
     button: {
+      type: String,
+      default: null
+    },
+    user: {
       type: String,
       default: null
     },

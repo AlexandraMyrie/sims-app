@@ -8,6 +8,7 @@ use Kreait\Firebase\Contract\Database;
 
 class PatientController extends Controller
 {
+    // _constuct initializes the database and variables that will be used globally in the specific Controller file
     public function __construct(Database $database)
     {
         $this->database = $database;
@@ -22,9 +23,11 @@ class PatientController extends Controller
     public function index()
     {
         $user_type = session()->get('type');
-        
+        $user_id = session()->get('uid');
+        $user = $this->database->getReference('doctors/' . $user_id)->getValue();
+
         $patients = $this->database->getReference($this->table_name)->getValue();
-        return Inertia::render("Patients/Index", ['patients' => $patients, 'user_type' => $user_type]);
+        return Inertia::render("Patients/Index", ['patients' => $patients, 'user_type' => $user_type, 'current_user' => $user]);
     }
 
     /**
@@ -46,6 +49,9 @@ class PatientController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        //Validates the information collected
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -59,6 +65,9 @@ class PatientController extends Controller
             'gender' => 'required',
 
         ]);
+
+
+        //prepare the information collected to be stored to the database as an array
         $postData = [
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -92,9 +101,24 @@ class PatientController extends Controller
      */
     public function show($id)
     {
+        //Displays the patients information and reports on screen
+
         $user_type = session()->get('type');
+        $user_id = session()->get('uid');
+        $user = $this->database->getReference('doctors/' . $user_id)->getValue();
+        $reports = $this->database->getReference('patients_reports/')->getValue();
+        $patient_reports = [];
+        if ($reports != []) {
+            foreach ($reports as $report) {
+                if ($report['patient_id'] == $id) {
+                    array_push($patient_reports, $report);
+                }
+            }
+        }
+
         $patient = $this->database->getReference($this->table_name . '/' . $id)->getValue();
-        return Inertia::render("Patients/Show", ['patient' => $patient,'user_type' => $user_type]);
+
+        return Inertia::render("Patients/Show", ['reports' => $patient_reports, 'patient' => $patient, 'user_type' => $user_type, 'current_user' => $user]);
     }
 
     /**
@@ -105,9 +129,12 @@ class PatientController extends Controller
      */
     public function edit($id)
     {
+        //Renders the patient form on screen with their information
         $user_type = session()->get('type');
+        $user_id = session()->get('uid');
+        $user = $this->database->getReference('doctors/' . $user_id)->getValue();
         $patient = $this->database->getReference($this->table_name . '/' . $id)->getValue();
-        return Inertia::render("Patients/Create", ['patient' => $patient, 'mode' => 'Edit','user_type' => $user_type]);
+        return Inertia::render("Patients/Create", ['patient' => $patient, 'mode' => 'Edit', 'user_type' => $user_type, 'current_user' => $user]);
     }
 
     /**
@@ -117,8 +144,13 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    //Updates the patient information 
     public function update(Request $request, $id)
     {
+
+
         $this->database->getReference($this->table_name . '/' . $id)->update(array(
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -140,6 +172,8 @@ class PatientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //delete the selected patient information 
     public function destroy(Request $request)
     {
         $id = $request->id;

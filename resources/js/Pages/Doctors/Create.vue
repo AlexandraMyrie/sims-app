@@ -6,6 +6,7 @@
     url="doctors/create"
     label="Add Doctor"
     :user="user_type"
+    :current_user="current_user"
   >
     <loading-screen v-if="form.processing" />
     <form @submit.prevent="submit">
@@ -107,7 +108,8 @@ export default {
   props: {
     departments: Object,
     doctor: Object,
-    mode: String
+    mode: String,
+    current_user: Object
   },
 
   setup(props) {

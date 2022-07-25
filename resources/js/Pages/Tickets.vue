@@ -1,5 +1,10 @@
 <template>
-  <layout type="Doctor" title="Ticket" :user="user_type">
+  <layout
+    type="Doctor"
+    title="Ticket"
+    :user="user_type"
+    :current_user="current_user"
+  >
     <notification color="info" :icon="mdiMonitorCellphone">
       <b>Responsive table.</b> Collapses on mobile
     </notification>
@@ -104,7 +109,8 @@ export default {
   props: {
     tickets: Object,
     departments: Array,
-    user_type: String
+    user_type: String,
+    current_user: Object
   },
   methods: {
     deleteTicket(id) {

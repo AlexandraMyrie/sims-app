@@ -6,6 +6,7 @@
     url="departments/create"
     label="Add Department"
     :user="user_type"
+    :current_user="current_user"
   >
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
       <div v-for="department in departments" :key="department">
@@ -60,7 +61,8 @@ export default {
   },
   props: {
     departments: Object,
-    user_type: String
+    user_type: String,
+    current_user: Object
   }
 }
 </script>

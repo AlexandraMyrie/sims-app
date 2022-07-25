@@ -8,6 +8,7 @@ use Kreait\Firebase\Contract\Database;
 
 class DepartmentController extends Controller
 {
+    // _constuct initializes the database and variables that will be used globally in the specific Controller file
     public function __construct(Database $database)
     {
         $this->database = $database;
@@ -21,8 +22,10 @@ class DepartmentController extends Controller
     public function index()
     {
         $user_type = session()->get('type');
+        $user_id = session()->get('uid');
+        $user = $this->database->getReference('doctors/' . $user_id)->getValue();
         $departments = $this->database->getReference($this->table_name)->getValue();
-        return Inertia::render("Departments/Index", ['departments' => $departments, 'user_type' => $user_type]);
+        return Inertia::render("Departments/Index", ['departments' => $departments, 'user_type' => $user_type, 'current_user' => $user]);
     }
 
     /**

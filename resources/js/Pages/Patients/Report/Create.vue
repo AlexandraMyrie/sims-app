@@ -1,27 +1,15 @@
 <template>
-  <layout type="Doctor" :mode="mode" title="Report">
+  <layout
+    type="Doctor"
+    :mode="mode"
+    title="Report"
+    user="normal"
+    :current_user="current_user"
+  >
     <loading-screen v-if="form.processing" />
 
     <form @submit.prevent="submit">
       <card-component>
-        <div class="grid grid-cols-2 gap-4">
-          <base-input
-            v-model="form.first_name"
-            :error="form.errors.first_name"
-            label="First Name"
-            id="first_name"
-            class="w-full"
-          />
-
-          <base-input
-            v-model="form.last_name"
-            :error="form.errors.last_name"
-            label="Last Name"
-            id="last_name"
-            class="w-full"
-          />
-        </div>
-
         <div class="grid grid-cols1 gap-4">
           <base-input
             v-model="form.ticket"
@@ -39,6 +27,13 @@
             </option>
           </base-input>
         </div>
+        <base-input
+          v-model="form.diagnosis"
+          :error="form.errors.diagnosis"
+          label="Comments"
+          id="diagnosis"
+          class="w-full"
+        />
 
         <div class="flex justify-end">
           <jb-button
@@ -78,17 +73,20 @@ export default {
     patient: String,
     report: Object,
     tickets: Object,
-    mode: String
+    mode: String,
+    department: String,
+    current_user: Object
   },
 
   setup(props) {
     const report = props.report
     const patient = props.patient
+    const department = props.department
     const form = useForm({
-      first_name: report?.first_name,
-      last_name: report?.last_name,
+      diagnosis: report?.diagnosis,
       ticket: report?.ticket,
-      patient: patient
+      patient: patient,
+      department: department
     })
 
     function submit() {

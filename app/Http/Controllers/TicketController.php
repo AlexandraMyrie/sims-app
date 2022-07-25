@@ -10,12 +10,12 @@ use Session;
 class TicketController extends Controller
 {
 
+    // _constuct initializes the database and variables that will be used globally in the specific Controller file
     public function __construct(Database $database)
     {
         $this->database = $database;
         $this->table_name = 'tickets';
-        // $this->date = date('d-m-Y');
-        $this->date = "18-07-2022";
+        $this->date = date('24-07-2022');
     }
     /**
      * Display a listing of the resource.
@@ -24,41 +24,40 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        // dd(session()->get('type'));
-        // if ($request->session()->has('users')) {
+
+        // The user type is collected  along with all departments within the database
         $user_type = session()->get('type');
-        $date = date('d-m-Y');
         $departments = $this->database->getReference('departments')->getValue();
 
 
-
-
-
-
+        // Checks if the user is an admin
         if ($user_type == 'admin') {
 
             $tickets = [];
-           
+            //collects all departments tickets
             foreach ($departments as $department) {
                 $department_tickets = $this->database->getReference($this->table_name . '/' . $this->date . '/' . $department['key'])->getValue();
                 if (!$department_tickets == null)
                     $tickets = array_merge($tickets, $department_tickets);
             }
+            $user = [];
         } else {
+
+            //retrieves the department of the doctor 
             $user_id = session()->get('uid');
             $user = $this->database->getReference('doctors/' . $user_id)->getValue();
-           
+
+
+            //collects all tickets in specific department 
             $tickets = $this->database->getReference($this->table_name . '/' . $this->date . '/' . $user['department'])->getValue();
-            
-            
         }
 
         $tickets = collect($tickets)->sortByDesc('timestamp');
         $tickets->all();
-        
 
 
-        return Inertia::render("Tickets", ['tickets' => $tickets, 'departments' => $departments, 'user_type' => $user_type]);
+
+        return Inertia::render("Tickets", ['tickets' => $tickets, 'departments' => $departments, 'user_type' => $user_type, 'current_user' => $user]);
         // }
     }
 
@@ -67,63 +66,16 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
     public function create()
     {
-
-        $date = date('d-m-y');
-        $reference = $this->generateRef($date);
-        $count = $this->database->getReference($this->table_name . '/' . 'ticket_count')->getValue();
-        $count++;
-        $ticket_number = $this->generateTicket($count);
-        $date_time = date('d-m-y h:i:sa');;
-
-
-        $postData = [
-            'first_name' => 'john',
-            'last_name' => 'Doe',
-            'department' => '-N4-H6nF51sP_rTvwBx8',
-            'ticket_number' => $ticket_number,
-            'date_time' => $date_time,
-            'reason' => 'Back problems',
-            'status' => false,
-            'key' => '',
-        ];
-
-        $ticket_key = $reference->push($postData)->getKey();
-        $keyData = [
-            'key' => $ticket_key,
-        ];
-
-        $ticketData = [
-            'ticket_count' => $count,
-
-        ];
-
-
-        $this->database->getReference($this->table_name)->update($ticketData);
-        $this->database->getReference($this->table_name . '/' . $date . '/' . $ticket_key)->update($keyData);
-        return redirect()->route('tickets.index')->withSuccess("Test Ticket generated.");
     }
 
 
-    public function generateTicket($count)
-    {
-        $ticket_number =  "T" . "" . substr(str_repeat(0, 3) . $count, -3);
-        return $ticket_number;
-    }
 
 
-    public function generateRef($date)
-    {
-        if ($this->database->getReference($this->table_name . '/' . $date)) {
-            $reference = $this->database->getReference($this->table_name . '/' . $date);
-        } else {
-            $this->database->getReference($this->table_name)->push($date);
-            $reference = $this->database->getReference($this->table_name . '/' . $date);
-        }
-
-        return $reference;
-    }
     /**
      * Store a newly created resource in storage.
      *
@@ -151,6 +103,8 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //renders the form to change the status of a ticket
     public function edit(Request $request, $id)
     {
         $ticket =  $this->database->getReference($this->table_name . '/' . $this->date . '/' . $request['department'] . '/' . $request['key'])->getValue();
@@ -166,6 +120,9 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    //changes the status of the ticket 
     public function update(Request $request, $id)
     {
         $status = ['status' => $request->status];
@@ -179,6 +136,9 @@ class TicketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+
+    //delete the ticket from the database
     public function destroy(Request $request)
     {
 

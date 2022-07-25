@@ -6,6 +6,7 @@
     url="patients/create"
     label="Add Patient"
     :user="user_type"
+    :current_user="current_user"
   >
     <!-- <notification
       color="info"
@@ -65,6 +66,7 @@
 
                 <Link :href="route('patients.edit', patient.key)">
                   <jb-button
+                    v-if="user_type != 'admin'"
                     :outline="darkMode"
                     color="success"
                     label="Edit"
@@ -72,6 +74,7 @@
                   />
                 </Link>
                 <jb-button
+                  v-if="user_type != 'admin'"
                   :outline="darkMode"
                   color="danger"
                   label="Delete"
@@ -124,7 +127,8 @@ export default {
   },
   props: {
     patients: Object,
-    user_type: String
+    user_type: String,
+    current_user: Object
   },
   methods: {
     deletePatient(id) {

@@ -3,6 +3,7 @@
     type="Doctor"
     :title="'Patients/ ' + patient.first_name + ' ' + patient.last_name"
     :user="user_type"
+    :current_user="current_user"
   >
     <notification color="info" :icon="mdiMonitorCellphone">
       <b>Responsive table.</b> Collapses on mobile
@@ -10,6 +11,7 @@
     <div class="flex justify-end">
       <Link :href="route('patients.edit', patient.key)">
         <jb-button
+          v-if="user_type != 'admin'"
           :outline="darkMode"
           small
           color="info"
@@ -18,18 +20,8 @@
         />
       </Link>
     </div>
-    <div class="flex justify-end">
-      <Link :href="route('reports.create', patient)">
-        <jb-button
-          :outline="darkMode"
-          small
-          color="info"
-          label="Add Report"
-          class="my-4"
-        />
-      </Link>
-    </div>
-    <card-component>
+
+    <card-component title="General Information" class="mt-2">
       <div class="grid grid-cols-3 gap-4">
         <info-label title="First Name" :info="patient.first_name" />
         <info-label title="Last Name" :info="patient.first_name" />
@@ -50,66 +42,51 @@
       </div>
     </card-component>
 
-    <card-component :icon="mdiTicket" title="Reports" has-table>
+    <div class="flex justify-end mt-12">
+      <Link :href="route('reports.create', patient)">
+        <jb-button
+          v-if="user_type != 'admin'"
+          :outline="darkMode"
+          small
+          color="info"
+          label="Add Report"
+          class="my-4"
+        />
+      </Link>
+    </div>
+    <card-component :icon="mdiTicket" title="Reports" has-table class="mt-2">
       <base-table
         ><thead>
           <tr>
-            <th>Ticket Number</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Department</th>
-            <th>Reason</th>
-            <th>Status</th>
+            <th>Date</th>
+            <th />
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>test</td>
-            <td>tests</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
+          <tr v-for="report in reports" :key="report">
+            <td>{{ report.date }}</td>
             <td>
               <div class="flex justify-end mr-1">
-                <Link :href="route('tickets.edit', [])">
+                <Link :href="route('reports.show', report.key)">
                   <jb-button
                     :outline="darkMode"
-                    color="success"
-                    label="Change Status"
+                    color="info"
+                    label="View"
                     class="mr-4"
                   />
                 </Link>
+
                 <jb-button
                   :outline="darkMode"
                   color="danger"
                   label="Delete"
-                  s
+                  @click="deleteReport(report.key)"
                 />
               </div>
             </td>
-
-            <!-- <td>
-              <div class="flex justify-end mr-1">
-                <Link :href="route('doctors.edit', doctor.key)">
-                  <jb-button
-                    :outline="darkMode"
-                    color="success"
-                    label="Edit"
-                    class="mr-4"
-                  />
-                </Link>
-                <jb-button
-                  :outline="darkMode"
-                  color="danger"
-                  label="Delete"
-                  @click="deleteDoctor(doctor.key)"
-                />
-              </div>
-            </td> -->
           </tr>
-        </tbody></base-table
-      >
+        </tbody>
+      </base-table>
     </card-component>
   </layout>
 </template>
@@ -130,7 +107,7 @@ import {
 } from "@mdi/js"
 import CardWidget from "@/components/CardWidget.vue"
 import CardComponent from "@/components/CardComponent.vue"
-import BaseTable from "@/components/BaseTable.vue"
+import BaseTable from "@/components/Basetable.vue"
 import Notification from "@/components/Notification.vue"
 import JbButton from "@/components/JbButton.vue"
 import Layout from "@/components/Layout.vue"
@@ -155,8 +132,25 @@ export default {
   },
   props: {
     patient: Object,
-    user_type: String
+    user_type: String,
+    reports: Object,
+    current_user: Object
   },
-  methods: {}
+  methods: {
+    deleteReport(id) {
+      Inertia.delete(route("reports.destroy", id))
+    },
+
+    showReport(id, patient) {
+      Inertia.visit("reports/show", {
+        method: "get",
+        data: { id: id, patient: patient }
+      })
+    },
+
+    test(id) {
+      return id
+    }
+  }
 }
 </script>

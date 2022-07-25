@@ -1,5 +1,10 @@
 <template>
-  <layout type="Admin" title="Departments">
+  <layout
+    type="Admin"
+    title="Department"
+    user="admin"
+    :current_user="current_user"
+  >
     <loading-screen v-if="form.processing" />
 
     <form @submit.prevent="submit">
@@ -64,6 +69,9 @@ export default {
     Loading,
 
     LoadingScreen
+  },
+  props: {
+    current_user: Object
   },
 
   setup() {

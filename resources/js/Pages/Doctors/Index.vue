@@ -6,6 +6,7 @@
     url="doctors/create"
     label="Add Doctor"
     :user="user_type"
+    :current_user="current_user"
   >
     <notification color="info" :icon="mdiMonitorCellphone">
       <b>Responsive table.</b> Collapses on mobile
@@ -91,7 +92,8 @@ export default {
   props: {
     doctors: Object,
     departments: Array,
-    user_type: String
+    user_type: String,
+    current_user: Object
   },
   methods: {
     departmentCheck(dept) {

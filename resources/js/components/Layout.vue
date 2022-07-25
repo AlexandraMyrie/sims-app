@@ -1,8 +1,13 @@
 <template>
   <Head :title="title" />
-  <app :user="user">
+  <app :user="user" :current_user="current_user">
     <title-bar :type="type" :page="title" />
-    <hero-bar :button="button" :labelIcon="mdiTicket" :label="label" :url="url"
+    <hero-bar
+      :user="user"
+      :button="button"
+      :labelIcon="mdiTicket"
+      :label="label"
+      :url="url"
       >{{ mode }} {{ title }}</hero-bar
     >
     <main-section>
@@ -43,6 +48,10 @@ import TitleSubBar from "@/components/TitleSubBar.vue"
 import FlashMessage from "@/components/FlashMessage.vue"
 
 defineProps({
+  current_user: {
+    type: Object,
+    default: null
+  },
   label: {
     type: String,
     default: null

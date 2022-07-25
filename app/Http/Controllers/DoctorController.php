@@ -10,6 +10,8 @@ use Kreait\Firebase\Contract\Auth;
 
 class DoctorController extends Controller
 {
+
+    // _constuct initializes the database and variables that will be used globally in the specific Controller file
     public function __construct(Database $database, Auth $auth)
     {
         $this->database = $database;
@@ -24,11 +26,13 @@ class DoctorController extends Controller
     public function index()
     {
         $user_type = session()->get('type');
+        $user_id = session()->get('uid');
+        $user = $this->database->getReference('doctors/' . $user_id)->getValue();
         $doctors = $this->database->getReference($this->table_name)->getValue();
 
         $departments = $this->database->getReference('departments')->getValue();
 
-        return Inertia::render("Doctors/Index", ['doctors' => $doctors, 'departments' => $departments, 'user_type' => $user_type]);
+        return Inertia::render("Doctors/Index", ['doctors' => $doctors, 'departments' => $departments, 'user_type' => $user_type, 'current_user' => $user]);
     }
 
     /**
@@ -36,6 +40,8 @@ class DoctorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function create()
     {
         $departments = $this->database->getReference('departments')->getValue();

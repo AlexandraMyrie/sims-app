@@ -1,5 +1,10 @@
 <template>
-  <layout type="Doctor" title="Patients" :user="user_type">
+  <layout
+    type="Doctor"
+    title="Patients"
+    :user="user_type"
+    :current_user="current_user"
+  >
     <loading-screen v-if="form.processing" />
     <form @submit.prevent="submit">
       <card-component>
@@ -129,7 +134,8 @@ export default {
     patient: Object,
     location: String,
     mode: String,
-    user_type: String
+    user_type: String,
+    current_user: Object
   },
 
   setup(props) {

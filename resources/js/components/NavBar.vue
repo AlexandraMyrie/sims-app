@@ -91,18 +91,14 @@ const menuOpenLg = () => {
         class="max-h-screen-menu overflow-y-auto lg:overflow-visible lg:flex lg:items-stretch lg:justify-end lg:ml-auto"
       >
         <nav-bar-menu has-divider>
-          <nav-bar-item-label :icon="mdiMenu" label="Sample menu" />
+          <nav-bar-item-label :icon="mdiMenu" label="Options" />
 
           <template #dropdown>
             <nav-bar-item>
-              <nav-bar-item-label :icon="mdiClockOutline" label="Item One" />
+              <nav-bar-item-label :icon="mdiClockOutline" label="GitHub" />
             </nav-bar-item>
             <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCloud" label="Item Two" />
-            </nav-bar-item>
-            <divider nav-bar />
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCrop" label="Item Last" />
+              <nav-bar-item-label :icon="mdiCloud" label="LinkedIn" />
             </nav-bar-item>
           </template>
         </nav-bar-menu>
@@ -112,16 +108,6 @@ const menuOpenLg = () => {
           </nav-bar-item-label>
 
           <template #dropdown>
-            <nav-bar-item to="/profile">
-              <nav-bar-item-label :icon="mdiAccount" label="My Profile" />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiCogOutline" label="Settings" />
-            </nav-bar-item>
-            <nav-bar-item>
-              <nav-bar-item-label :icon="mdiEmail" label="Messages" />
-            </nav-bar-item>
-            <divider nav-bar />
             <Link :href="route('logout')" method="post">
               <nav-bar-item>
                 <nav-bar-item-label :icon="mdiLogout" label="Log Out" />
