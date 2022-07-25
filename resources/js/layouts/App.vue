@@ -17,7 +17,7 @@ const mainStore = useMainStore()
 mainStore.fullScreenToggle(false)
 
 mainStore.setUser({
-  name: "John Doe",
+  name: "Test Doe",
   email: "john@example.com",
   avatar:
     "https://avatars.dicebear.com/api/avataaars/example.svg?options[top][]=shortHair&options[accessoriesChance]=93"

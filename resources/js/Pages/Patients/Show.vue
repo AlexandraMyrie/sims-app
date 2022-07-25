@@ -2,6 +2,7 @@
   <layout
     type="Doctor"
     :title="'Patients/ ' + patient.first_name + ' ' + patient.last_name"
+    :user="user_type"
   >
     <notification color="info" :icon="mdiMonitorCellphone">
       <b>Responsive table.</b> Collapses on mobile
@@ -48,6 +49,68 @@
         />
       </div>
     </card-component>
+
+    <card-component :icon="mdiTicket" title="Reports" has-table>
+      <base-table
+        ><thead>
+          <tr>
+            <th>Ticket Number</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Department</th>
+            <th>Reason</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>test</td>
+            <td>tests</td>
+            <td>test</td>
+            <td>test</td>
+            <td>test</td>
+            <td>test</td>
+            <td>
+              <div class="flex justify-end mr-1">
+                <Link :href="route('tickets.edit', [])">
+                  <jb-button
+                    :outline="darkMode"
+                    color="success"
+                    label="Change Status"
+                    class="mr-4"
+                  />
+                </Link>
+                <jb-button
+                  :outline="darkMode"
+                  color="danger"
+                  label="Delete"
+                  s
+                />
+              </div>
+            </td>
+
+            <!-- <td>
+              <div class="flex justify-end mr-1">
+                <Link :href="route('doctors.edit', doctor.key)">
+                  <jb-button
+                    :outline="darkMode"
+                    color="success"
+                    label="Edit"
+                    class="mr-4"
+                  />
+                </Link>
+                <jb-button
+                  :outline="darkMode"
+                  color="danger"
+                  label="Delete"
+                  @click="deleteDoctor(doctor.key)"
+                />
+              </div>
+            </td> -->
+          </tr>
+        </tbody></base-table
+      >
+    </card-component>
   </layout>
 </template>
 
@@ -91,7 +154,8 @@ export default {
     Link
   },
   props: {
-    patient: Object
+    patient: Object,
+    user_type: String
   },
   methods: {}
 }

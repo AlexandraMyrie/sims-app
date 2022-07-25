@@ -1,12 +1,5 @@
 <template>
-  <layout
-    type="Doctor"
-    title="Ticket"
-    button="add"
-    url="tickets/create"
-    label="Generate Ticket"
-    :user="user_type"
-  >
+  <layout type="Doctor" title="Ticket" :user="user_type">
     <notification color="info" :icon="mdiMonitorCellphone">
       <b>Responsive table.</b> Collapses on mobile
     </notification>

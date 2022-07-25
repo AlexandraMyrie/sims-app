@@ -12,6 +12,7 @@ class PatientController extends Controller
     {
         $this->database = $database;
         $this->table_name = 'patients';
+        $this->user_type = session()->get('type');
     }
     /**
      * Display a listing of the resource.
@@ -21,6 +22,7 @@ class PatientController extends Controller
     public function index()
     {
         $user_type = session()->get('type');
+        
         $patients = $this->database->getReference($this->table_name)->getValue();
         return Inertia::render("Patients/Index", ['patients' => $patients, 'user_type' => $user_type]);
     }
@@ -90,8 +92,9 @@ class PatientController extends Controller
      */
     public function show($id)
     {
+        $user_type = session()->get('type');
         $patient = $this->database->getReference($this->table_name . '/' . $id)->getValue();
-        return Inertia::render("Patients/Show", ['patient' => $patient]);
+        return Inertia::render("Patients/Show", ['patient' => $patient,'user_type' => $user_type]);
     }
 
     /**
@@ -102,8 +105,9 @@ class PatientController extends Controller
      */
     public function edit($id)
     {
+        $user_type = session()->get('type');
         $patient = $this->database->getReference($this->table_name . '/' . $id)->getValue();
-        return Inertia::render("Patients/Create", ['patient' => $patient, 'mode' => 'Edit']);
+        return Inertia::render("Patients/Create", ['patient' => $patient, 'mode' => 'Edit','user_type' => $user_type]);
     }
 
     /**
